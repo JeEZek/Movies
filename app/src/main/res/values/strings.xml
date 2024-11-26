@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Movies</string>
+    <string name="navigation_item_popular">Popular</string>
+    <string name="navigation_item_online">Online</string>
+    <string name="navigation_item_favourite">Favourite</string>
+    <string name="navigation_item_movie">Movie</string>
 </resources>
