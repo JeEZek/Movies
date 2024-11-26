@@ -16,7 +16,7 @@ fun AppNavGraph(
 ) {
     NavHost(
         navController = navHostController,
-        startDestination = Screen.Popular.route
+        startDestination = Screen.Home.route
     ) {
         homeScreenNavGraph(
             popularScreenContent = popularScreenContent,

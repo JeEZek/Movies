@@ -11,4 +11,11 @@ interface ApiService {
         @Query("api_key") token: String,
         @Query("page") page: Int = 1
     ): ResponseDto
+
+
+    @GET("movie/now_playing")
+    suspend fun loadNowPlayingMovies(
+        @Query("api_key") token: String,
+        @Query("page") page: Int = 1
+    )
 }

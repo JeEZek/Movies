@@ -16,7 +16,7 @@ fun NavGraphBuilder.homeScreenNavGraph(
 ) {
     navigation(
         startDestination = Screen.Popular.route,
-        route = Screen.Popular.route
+        route = Screen.Home.route
     ) {
         composable(route = Screen.Popular.route) {
             popularScreenContent()

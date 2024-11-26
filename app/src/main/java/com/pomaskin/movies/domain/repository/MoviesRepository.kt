@@ -7,4 +7,5 @@ interface MoviesRepository {
 
     fun loadPopularMoviesList(): StateFlow<List<Movie>>
 
+    fun loadNowPlayingMoviesList(): StateFlow<List<Movie>>
 }

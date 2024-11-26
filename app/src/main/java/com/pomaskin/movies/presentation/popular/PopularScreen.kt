@@ -135,6 +135,7 @@ fun PopularMovies(
     }
 }
 
+//TODO callback dont work -_-   (open info about specific movie)
 @Composable
 fun MovieCard(
     screenState: State<PopularScreenState>,

@@ -25,6 +25,7 @@ class MoviesRepositoryImpl @Inject constructor(
     private val token = "c0a0eabb0d25de2c20dda5ac6af0eb10"
     private var page = 1
 
+    //TODO loading when scrolling dont work -_-
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private val nextDataNeededEvents = MutableSharedFlow<Unit>(replay = 1)
     private val refreshedListFlow = MutableSharedFlow<List<Movie>>()
@@ -62,6 +63,11 @@ class MoviesRepositoryImpl @Inject constructor(
 
 
     override fun loadPopularMoviesList(): StateFlow<List<Movie>> {
+        return recommendations
+    }
+
+    //TODO the same thing with NowPlaying, but after fixing loading when scrolling
+    override fun loadNowPlayingMoviesList(): StateFlow<List<Movie>> {
         return recommendations
     }
 
