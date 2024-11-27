@@ -1,16 +1,15 @@
 package com.pomaskin.movies.domain.usecases
 
 import com.pomaskin.movies.data.repository.MoviesRepositoryImpl
-import com.pomaskin.movies.domain.entity.Movie
-
+import com.pomaskin.movies.domain.entity.Video
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
-class LoadPopularMoviesListUseCase @Inject constructor(
+class GetVideoUseCase @Inject constructor(
     private val repository: MoviesRepositoryImpl
 ){
 
-    operator fun invoke(): StateFlow<List<Movie>> {
-        return repository.loadPopularMoviesList()
+    suspend operator fun invoke(id: Int): Video {
+        return repository.getVideo(id)
     }
 }

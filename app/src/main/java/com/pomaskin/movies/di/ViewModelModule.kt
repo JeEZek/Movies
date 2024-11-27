@@ -2,6 +2,7 @@ package com.pomaskin.movies.di
 
 import androidx.lifecycle.ViewModel
 import com.pomaskin.movies.presentation.main.MainViewModel
+import com.pomaskin.movies.presentation.movie_single.MovieViewModel
 import com.pomaskin.movies.presentation.popular.PopularViewModel
 import dagger.Binds
 import dagger.Module
@@ -19,4 +20,9 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(PopularViewModel::class)
     fun bindPopularViewModel(viewModel: PopularViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MovieViewModel::class)
+    fun bindMovieViewModel(viewModel: MovieViewModel): ViewModel
 }

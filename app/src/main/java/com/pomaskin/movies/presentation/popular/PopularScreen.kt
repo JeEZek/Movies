@@ -2,20 +2,30 @@ package com.pomaskin.movies.presentation.popular
 
 import android.util.Log
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -106,11 +117,9 @@ fun PopularMovies(
             key = { it.id }
         ) {
             MovieCard(
-                screenState = screenState,
                 paddingValues = paddingValues,
                 movie = it,
                 onMovieClickListener = onMovieClickListener,
-                nextDataIsLoading = nextDataIsLoading
             )
         }
         item {
@@ -123,26 +132,26 @@ fun PopularMovies(
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
+                    Log.d("loadingNextPopular", "data ${screenState.value}")
+
                 }
-                Log.d("Test_loading", "loading")
             } else {
                 SideEffect {
                     viewModel.loadNextPopular()
+                    Log.d("loadingNextPopular", "PopularScreen")
+                    Log.d("loadingNextPopular", "data ${screenState.value}")
                 }
-                Log.d("Test_loading", "Side effect")
             }
         }
     }
 }
 
-//TODO callback dont work -_-   (open info about specific movie)
+
 @Composable
 fun MovieCard(
-    screenState: State<PopularScreenState>,
     paddingValues: PaddingValues,
     movie: Movie,
-    onMovieClickListener: (Movie) -> Unit,
-    nextDataIsLoading: Boolean
+    onMovieClickListener: (Movie) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -150,33 +159,76 @@ fun MovieCard(
             .padding(16.dp)
             .clickable { onMovieClickListener(movie) },
         shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp), // Используем правильный метод
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        )
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
-            Text(
-                text = movie.title,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            // Movie Poster
             AsyncImage(
                 model = "https://image.tmdb.org/t/p/w500" + movie.posterPath,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(250.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                 contentDescription = "Movie Poster",
                 contentScale = ContentScale.Crop
             )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Movie Title
+            Text(
+                text = movie.title,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Overview
+            Text(
+                text = movie.overview,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp),
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Rating and Vote Count
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = "Rating",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "${movie.voteAverage} (${movie.voteCount} votes)",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
         }
     }
 }
-
-
-

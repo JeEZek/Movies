@@ -22,7 +22,6 @@ import com.pomaskin.movies.navigation.rememberNavigationState
 import com.pomaskin.movies.presentation.movie_single.MovieDescription
 import com.pomaskin.movies.presentation.popular.PopularScreen
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
     val navigationState = rememberNavigationState()

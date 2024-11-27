@@ -1,6 +1,8 @@
 package com.pomaskin.movies.presentation.main
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
@@ -18,18 +20,18 @@ sealed class NavigationItem(
     object Popular : NavigationItem(
         screen = Screen.Home,
         titleResId = R.string.navigation_item_popular,
-        icon = Icons.Outlined.Home
+        icon = Icons.Outlined.CheckCircle
     )
 
     object  Online: NavigationItem(
         screen = Screen.Favourite,
         titleResId = R.string.navigation_item_online,
-        icon = Icons.Outlined.Favorite
+        icon = Icons.Outlined.Face
     )
 
     object Favourite : NavigationItem(
         screen = Screen.Online,
         titleResId = R.string.navigation_item_favourite,
-        icon = Icons.Outlined.Person
+        icon = Icons.Outlined.Favorite
     )
 }

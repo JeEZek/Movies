@@ -6,11 +6,11 @@ import com.pomaskin.movies.domain.entity.Movie
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
-class LoadNowPlayingMoviesListUseCase @Inject constructor(
+class GetPopularMoviesListUseCase @Inject constructor(
     private val repository: MoviesRepositoryImpl
 ){
 
     operator fun invoke(): StateFlow<List<Movie>> {
-        return repository.loadNowPlayingMoviesList()
+        return repository.getPopularMoviesList()
     }
 }
