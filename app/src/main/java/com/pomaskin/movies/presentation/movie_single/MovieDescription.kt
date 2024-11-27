@@ -1,7 +1,9 @@
 package com.pomaskin.movies.presentation.movie_single
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,9 +24,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +49,8 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import com.pomaskin.movies.domain.entity.Movie
 import com.pomaskin.movies.getApplicationComponent
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun MovieDescription(
@@ -59,14 +65,18 @@ fun MovieDescription(
     }
 
 
-    MovieDescriptionContent(movie = movie, video = video)
+
+    MovieDescriptionContent(movie = movie, video = video, viewModel=viewModel)
 }
 
 @Composable
 fun MovieDescriptionContent(
     movie: Movie,
     video: String,
+    viewModel: MovieViewModel
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -93,18 +103,40 @@ fun MovieDescriptionContent(
                     contentScale = ContentScale.Crop
                 )
             }
+
             item {
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = movie.title,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
+                Row(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = movie.title,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = "Add to Favorites",
+                        tint = Color(0xFFFFA500),
+                        modifier = Modifier
+                            .size(32.dp)
+                            .clickable {
+                                coroutineScope.launch {
+                                    viewModel.changeFavouriteStatus(mediaId = movie.id, favorite = true)
+                                }
+                            }
+                    )
+                }
             }
+
             item {
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -118,6 +150,7 @@ fun MovieDescriptionContent(
                     overflow = TextOverflow.Ellipsis
                 )
             }
+
             item {
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -155,6 +188,8 @@ fun MovieDescriptionContent(
         }
     }
 }
+
+
 
 
 

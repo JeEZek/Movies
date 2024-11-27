@@ -11,4 +11,6 @@ interface MoviesRepository {
     suspend fun getVideo(movieId: Int): Video
 
     suspend fun loadNextPopularMoviesList()
+
+    suspend fun changeFavouriteStatus(mediaId: Int, favorite: Boolean)
 }

@@ -55,6 +55,7 @@ fun PopularScreen(
     val viewModel: PopularViewModel = viewModel(factory = component.getViewModelFactory())
     val screenState = viewModel.screenState.collectAsState(PopularScreenState.Initial)
 
+
     PopularScreenContent(
         viewModel = viewModel,
         screenState = screenState,
