@@ -22,18 +22,7 @@ class PopularViewModel @Inject constructor(
 
     private val popularFlow = getPopularMoviesListUseCase()
 
-    private val loadNextPopularEvent = MutableSharedFlow<Unit>()
-    private val loadNextPopularFlow = flow {
-        loadNextPopularEvent.collect{
-            Log.d("loadingNextPopular", "loadNextPopularEvent. movies in var - ${popularFlow.value}")
-            emit(
-                PopularScreenState.Movies(
-                    movies = popularFlow.value,
-                    nextDataIsLoading = true
-                )
-            )
-        }
-    }
+    private val loadNextPopularFlow = MutableSharedFlow<PopularScreenState>()
 
     val screenState = popularFlow
         .filter { it.isNotEmpty() }
@@ -41,12 +30,18 @@ class PopularViewModel @Inject constructor(
         .onStart { emit(PopularScreenState.Loading) }
         .mergeWith(loadNextPopularFlow)
 
-    fun loadNextPopular() {
 
+    fun loadNextPopular() {
         Log.d("loadingNextPopular", "loadNextPopular")
         viewModelScope.launch {
-            loadNextPopularEvent.emit(Unit)
+            loadNextPopularFlow.emit(
+                PopularScreenState.Movies(
+                    movies = popularFlow.value,
+                    nextDataIsLoading = true
+                )
+            )
             loadNextPopularUseCase()
         }
     }
+
 }

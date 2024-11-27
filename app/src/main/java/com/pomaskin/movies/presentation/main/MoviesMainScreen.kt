@@ -21,6 +21,7 @@ import com.pomaskin.movies.navigation.Screen
 import com.pomaskin.movies.navigation.rememberNavigationState
 import com.pomaskin.movies.presentation.favourite.FavouriteScreen
 import com.pomaskin.movies.presentation.movie_single.MovieDescription
+import com.pomaskin.movies.presentation.online.OnlinerScreen
 import com.pomaskin.movies.presentation.popular.PopularScreen
 
 @Composable
@@ -72,7 +73,14 @@ fun MainScreen() {
                     movie = movie
                 )
             },
-            onlineScreenContent = { TextCounter(name = "Online") },
+            onlineScreenContent = {
+                OnlinerScreen(
+                    paddingValues = paddingValues,
+                    onMovieCardClickListener = { movie ->
+                        navigationState.navigateToMovieInfo(movie)
+                    }
+                )
+            },
             favouriteScreenContent = {
                 FavouriteScreen(
                     paddingValues = paddingValues,

@@ -10,11 +10,16 @@ interface MoviesRepository {
 
     fun getFavouriteMoviesList(): StateFlow<List<Movie>>
 
+    fun getOnlineMoviesList(): StateFlow<List<Movie>>
+
+
     suspend fun getVideo(movieId: Int): Video
 
     suspend fun loadNextPopularMoviesList()
 
     suspend fun loadNextFavouriteMoviesList()
+
+    suspend fun loadNextOnlineMoviesList()
 
     suspend fun changeFavouriteStatus(mediaId: Int, favorite: Boolean)
 }

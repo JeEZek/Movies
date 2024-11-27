@@ -1,4 +1,4 @@
-package com.pomaskin.movies.presentation.favourite
+package com.pomaskin.movies.presentation.online
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -30,9 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,15 +44,16 @@ import com.pomaskin.movies.domain.entity.Movie
 import com.pomaskin.movies.getApplicationComponent
 
 @Composable
-fun FavouriteScreen(
+fun OnlinerScreen(
     paddingValues: PaddingValues,
     onMovieCardClickListener: (Movie) -> Unit
 ) {
     val component = getApplicationComponent()
-    val viewModel: FavouriteViewModel = viewModel(factory = component.getViewModelFactory())
-    val screenState = viewModel.screenState.collectAsState(FavouriteScreenState.Initial)
+    val viewModel: OnlineViewModel = viewModel(factory = component.getViewModelFactory())
+    val screenState = viewModel.screenState.collectAsState(OnlineScreenState.Initial)
 
-    FavouriteScreenContent(
+
+    OnlinerScreenContent(
         viewModel = viewModel,
         screenState = screenState,
         paddingValues = paddingValues,
@@ -64,19 +62,19 @@ fun FavouriteScreen(
 }
 
 @Composable
-private fun FavouriteScreenContent(
-    viewModel: FavouriteViewModel,
-    screenState: State<FavouriteScreenState>,
+private fun OnlinerScreenContent(
+    viewModel: OnlineViewModel,
+    screenState: State<OnlineScreenState>,
     paddingValues: PaddingValues,
     onMovieCardClickListener: (Movie) -> Unit
 ) {
     when (val currentState = screenState.value) {
-        is FavouriteScreenState.Movies -> {
+        is OnlineScreenState.Movies -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                FavouriteMovies(
+                OnlinerMovies(
                     viewModel = viewModel,
                     screenState = screenState,
                     paddingValues = paddingValues,
@@ -87,7 +85,7 @@ private fun FavouriteScreenContent(
             }
         }
 
-        is FavouriteScreenState.Loading -> {
+        is OnlineScreenState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -96,14 +94,14 @@ private fun FavouriteScreenContent(
             }
         }
 
-        FavouriteScreenState.Initial -> {}
+        OnlineScreenState.Initial -> {}
     }
 }
 
 @Composable
-fun FavouriteMovies(
-    viewModel: FavouriteViewModel,
-    screenState: State<FavouriteScreenState>,
+fun OnlinerMovies(
+    viewModel: OnlineViewModel,
+    screenState: State<OnlineScreenState>,
     paddingValues: PaddingValues,
     movies: List<Movie>,
     onMovieClickListener: (Movie) -> Unit,
@@ -132,14 +130,14 @@ fun FavouriteMovies(
                     contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
-                    Log.d("loadingNextFavourite", "data ${screenState.value}")
+                    Log.d("loadingNextOnliner", "data ${screenState.value}")
 
                 }
             } else {
                 SideEffect {
-                    viewModel.loadNextFavourite()
-                    Log.d("loadingNextFavourite", "FavouriteScreen")
-                    Log.d("loadingNextFavourite", "data ${screenState.value}")
+                    viewModel.loadNextOnline()
+                    Log.d("loadingNextOnliner", "OnlinerScreen")
+                    Log.d("loadingNextOnliner", "data ${screenState.value}")
                 }
             }
         }

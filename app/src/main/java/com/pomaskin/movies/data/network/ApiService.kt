@@ -30,9 +30,14 @@ interface ApiService {
         @Query("api_key") token: String,
     ): VideoResponseDto
 
-    @GET("movie/{type}")
+    @GET("movie/popular")
     suspend fun getPopularMovies(
-        @Path("type") type: String,
+        @Query("api_key") token: String,
+        @Query("page") page: Int = 1
+    ): MoviesResponseDto
+
+    @GET("movie/now_playing")
+    suspend fun getOnlineMovies(
         @Query("api_key") token: String,
         @Query("page") page: Int = 1
     ): MoviesResponseDto

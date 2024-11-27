@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.pomaskin.movies.presentation.favourite.FavouriteViewModel
 import com.pomaskin.movies.presentation.main.MainViewModel
 import com.pomaskin.movies.presentation.movie_single.MovieViewModel
+import com.pomaskin.movies.presentation.online.OnlineViewModel
 import com.pomaskin.movies.presentation.popular.PopularViewModel
 import dagger.Binds
 import dagger.Module
@@ -31,5 +32,10 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(FavouriteViewModel::class)
     fun bindFavouriteViewModel(viewModel: FavouriteViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(OnlineViewModel::class)
+    fun bindOnlineViewModel(viewModel: OnlineViewModel): ViewModel
 
 }
