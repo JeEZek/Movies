@@ -19,6 +19,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pomaskin.movies.navigation.AppNavGraph
 import com.pomaskin.movies.navigation.Screen
 import com.pomaskin.movies.navigation.rememberNavigationState
+import com.pomaskin.movies.presentation.favourite.FavouriteScreen
 import com.pomaskin.movies.presentation.movie_single.MovieDescription
 import com.pomaskin.movies.presentation.popular.PopularScreen
 
@@ -62,7 +63,6 @@ fun MainScreen() {
                         navigationState.navigateToMovieInfo(movie)
                     }
                 )
-
             },
             movieSingleScreenContent = { movie ->
                 MovieDescription(
@@ -73,7 +73,14 @@ fun MainScreen() {
                 )
             },
             onlineScreenContent = { TextCounter(name = "Online") },
-            favouriteScreenContent = { TextCounter(name = "Favourite") }
+            favouriteScreenContent = {
+                FavouriteScreen(
+                    paddingValues = paddingValues,
+                    onMovieCardClickListener = { movie ->
+                        navigationState.navigateToMovieInfo(movie)
+                    }
+                )
+            }
         )
     }
 }

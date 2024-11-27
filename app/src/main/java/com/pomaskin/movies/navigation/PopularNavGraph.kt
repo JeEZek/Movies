@@ -20,7 +20,6 @@ fun NavGraphBuilder.homeScreenNavGraph(
     ) {
         composable(route = Screen.Popular.route) {
             popularScreenContent()
-
         }
         composable(
             route = Screen.MovieInfo.route,

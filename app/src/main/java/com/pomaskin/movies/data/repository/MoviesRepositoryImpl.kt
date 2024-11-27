@@ -26,8 +26,18 @@ class MoviesRepositoryImpl @Inject constructor(
     private val accountId = 21651574
     private val authorization = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjMGEwZWFiYjBkMjVkZTJjMjBkZGE1YWM2YWYwZWIxMCIsIm5iZiI6MTczMjYwNzY0My4xMTk0Mjg2LCJzdWIiOiI2NzQ0NzcwZGMyNDc2NWZhMmYyZGU3YTYiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.2KQEvwMt7OnQ-cZv-s97rltkx6Zm0QjbWdo6dApIgNQ"
 
-    private var page = 1
     private var currentType = "popular"
+
+    // TODO new data is loading, but now come to UI -_-
+    // TODO able to change type and use same functions for popular and online pages
+    // TODO after re-opening favourite page or when press on favourite button load data again
+
+//
+//
+//    For Popular page
+//
+//
+    private var pagePopular = 1
 
     //cashed data
     private val _movies = mutableListOf<Movie>()
@@ -35,18 +45,15 @@ class MoviesRepositoryImpl @Inject constructor(
         get() = _movies.toList()
 
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
-
-    // TODO new data is not showing
-    // TODO able to change type
     //loading data
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private val nextDataNeededEvents = MutableSharedFlow<Unit>(replay = 1)
     private val loadedListFlow = flow {
         nextDataNeededEvents.emit(Unit)
         nextDataNeededEvents.collect {
             Log.d("loadingNextPopular", "nextDataNeededEvents IMPL")
             val response =
-                apiService.getPopularMovies(type = currentType, token = token, page = page++)
+                apiService.getPopularMovies(type = currentType, token = token, page = pagePopular++)
             Log.d("loadingNextPopular", "response $response")
             val posts = mapper.mapResponseToPosts(response)
             _movies.addAll(posts)
@@ -70,13 +77,72 @@ class MoviesRepositoryImpl @Inject constructor(
         return recommendations
     }
 
+    override suspend fun loadNextPopularMoviesList() {
+        nextDataNeededEvents.emit(Unit)
+    }
+
+
+//
+//
+//    For Favourite page
+//
+//
+    private var pageFavourite = 1
+
+    //cashed data
+    private val _moviesFavourite = mutableListOf<Movie>()
+    private val moviesFavourite: List<Movie>
+        get() = _moviesFavourite.toList()
+
+    //loading data
+    private val coroutineScopeFavourite = CoroutineScope(Dispatchers.Default)
+    private val nextFavouriteDataNeededEvents = MutableSharedFlow<Unit>(replay = 1)
+    private val loadedFavouriteListFlow = flow {
+        nextFavouriteDataNeededEvents.emit(Unit)
+        nextFavouriteDataNeededEvents.collect {
+            Log.d("loadingNextFavourite", "nextDataNeededEvents IMPL")
+            val response = apiService.getFavouriteMovies(accountId = accountId, authorization = authorization, page = pageFavourite)
+            Log.d("loadingNextPopular", "response $response")
+            val posts = mapper.mapResponseToPosts(response)
+            _moviesFavourite.addAll(posts)
+            emit(moviesFavourite)
+        }
+    }.retry {
+        delay(RETRY_TIMEOUT_MILLIS)
+        true
+    }
+
+
+    private val recommendationsFavourite: StateFlow<List<Movie>> = loadedFavouriteListFlow
+        .stateIn(
+            scope = coroutineScopeFavourite,
+            started = SharingStarted.Lazily,
+            initialValue = moviesFavourite
+        )
+
+    override fun getFavouriteMoviesList(): StateFlow<List<Movie>> {
+        Log.d("loadingNextFavourite", "${recommendationsFavourite.value}")
+        return recommendationsFavourite
+    }
+
+    override suspend fun loadNextFavouriteMoviesList() {
+        nextFavouriteDataNeededEvents.emit(Unit)
+    }
+
+
+
+
+
+
+
+
+
+
     override suspend fun getVideo(movieId: Int): Video {
         return mapper.mapVideoDtoToVideo(apiService.getVideo(movieId, token))
     }
 
-    override suspend fun loadNextPopularMoviesList() {
-        nextDataNeededEvents.emit(Unit)
-    }
+
 
     override suspend fun changeFavouriteStatus(
         mediaId: Int,

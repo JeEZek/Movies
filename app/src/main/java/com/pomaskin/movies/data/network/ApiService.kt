@@ -24,6 +24,12 @@ interface ApiService {
         @Body request: FavoriteRequest
     ): MoviesResponseDto
 
+    @GET("movie/{movie_id}/videos")
+    suspend fun getVideo(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") token: String,
+    ): VideoResponseDto
+
     @GET("movie/{type}")
     suspend fun getPopularMovies(
         @Path("type") type: String,
@@ -31,12 +37,10 @@ interface ApiService {
         @Query("page") page: Int = 1
     ): MoviesResponseDto
 
-
-    @GET("movie/{movie_id}/videos")
-    suspend fun getVideo(
-        @Path("movie_id") movieId: Int,
-        @Query("api_key") token: String,
-    ): VideoResponseDto
-
-
+    @GET("account/{account_id}/favorite/movies")
+    suspend fun getFavouriteMovies(
+        @Path("account_id") accountId: Int,
+        @Header("Authorization") authorization: String,
+        @Query("page") page: Int = 1
+    ): MoviesResponseDto
 }

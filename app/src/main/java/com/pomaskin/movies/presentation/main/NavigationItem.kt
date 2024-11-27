@@ -24,13 +24,13 @@ sealed class NavigationItem(
     )
 
     object  Online: NavigationItem(
-        screen = Screen.Favourite,
+        screen = Screen.Online,
         titleResId = R.string.navigation_item_online,
         icon = Icons.Outlined.Face
     )
 
     object Favourite : NavigationItem(
-        screen = Screen.Online,
+        screen = Screen.Favourite,
         titleResId = R.string.navigation_item_favourite,
         icon = Icons.Outlined.Favorite
     )
